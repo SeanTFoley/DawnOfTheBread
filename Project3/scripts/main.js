@@ -10,10 +10,17 @@ const sceneHeight = app.view.height;
 
 //game variables
 let startScene;
-let gameScene, grandma, scoreLabel;
+let gameScene, scoreLabel;
 let gameOverScene;
 
-let zombies = [];
+let grandma;
+let breads = [];
 let bullets = [];
+let gumDrops = [];
 let score = 0;
 let paused = true;
+
+//Create game objects
+
+grandma = new Grandma(sceneWidth/2,sceneHeight/2, 5, 5, 0);
+gameScene.addChild(grandma);
