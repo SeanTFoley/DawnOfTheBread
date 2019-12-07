@@ -8,6 +8,8 @@ gameDiv.appendChild(app.view);
 const sceneWidth = app.view.width;
 const sceneHeight = app.view.height;
 
+let stage;
+
 //game variables
 let startScene;
 let gameScene, scoreLabel;
@@ -20,7 +22,19 @@ let gumDrops = [];
 let score = 0;
 let paused = true;
 
+PIXI.loader.load(setup);
+
+function setup(){
+    //Setup the stage
+    stage = app.stage;
+
+    //Create the game scene
+gameScene = new PIXI.Container();
+gameScene.visible = true;
+stage.addChild(gameScene);
+
 //Create game objects
 
-grandma = new Grandma(sceneWidth/2,sceneHeight/2, 5, 5, 0);
+grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
 gameScene.addChild(grandma);
+}
