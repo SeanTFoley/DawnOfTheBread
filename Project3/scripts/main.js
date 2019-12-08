@@ -56,7 +56,15 @@ function gameLoop(){
     //Move the bullets
     for(let b of bullets){
         b.move(dt);
+
+        if(b.x<-10 || b.x>sceneWidth+10 || b.y<-10 || b.y>sceneHeight+10){
+            gameScene.removeChild(b);
+            b.isAlive = false;
+        }
     }
+
+    //clean up dead bullets
+    bullets = bullets.filter(b=>b.isAlive);
 }
 
 function spawnBullet(e){
@@ -64,3 +72,4 @@ function spawnBullet(e){
     bullets.push(b);
     gameScene.addChild(b);
 }
+
