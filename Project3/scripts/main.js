@@ -38,3 +38,16 @@ stage.addChild(gameScene);
 grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
 gameScene.addChild(grandma);
 }
+
+//Start the game loop
+app.ticker.add(gameLoop);
+
+//Creates the game loop
+function gameLoop(){
+    //Calculate delta time
+    let dt = 1/app.ticker.FPS;
+        if(dt > 1/12) dt=1/12;
+
+    //Rotate grandma
+    grandma.updateRotation();
+}

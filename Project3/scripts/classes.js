@@ -24,7 +24,7 @@ class Grandma extends GameObject{
 }
 
 class TestGrandma extends PIXI.Graphics{
-    constructor(width,height,x=0,y=0,direction=45,color=0xFF0000){
+    constructor(width,height,x=0,y=0,direction=0,color=0xFF0000){
         super();
         this.beginFill(color);
         this.drawRect(x - width/2,y - height/2,width,height);
@@ -35,6 +35,21 @@ class TestGrandma extends PIXI.Graphics{
         this.width = width;
         this.height = height;
         this.direction = direction;
-        this.rotation = 3.14159/4;
+        this.rotation = 0;
+    }
+
+    //Updates the rotation based on the mouse position
+    updateRotation(){
+        //Grabs the two positions
+        let p1 = {
+            x: this.x + 5,
+            y: this.y
+        }
+        let p2 = app.renderer.plugins.interaction.mouse.global;
+
+        //Find the angle
+        let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+        this.rotation = angle;
     }
 }
