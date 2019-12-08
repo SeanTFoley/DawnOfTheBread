@@ -34,13 +34,15 @@ gameScene.visible = true;
 stage.addChild(gameScene);
 
 //Create game objects
-
 grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
 gameScene.addChild(grandma);
-}
 
 //Start the game loop
 app.ticker.add(gameLoop);
+
+//Listen for the click event
+app.view.onclick = spawnBullet;
+}
 
 //Creates the game loop
 function gameLoop(){
@@ -50,4 +52,15 @@ function gameLoop(){
 
     //Rotate grandma
     grandma.updateRotation();
+
+    //Move the bullets
+    for(let b of bullets){
+        b.move(dt);
+    }
+}
+
+function spawnBullet(e){
+    let b = new Bullet(5, grandma.x, grandma.y);
+    bullets.push(b);
+    gameScene.addChild(b);
 }

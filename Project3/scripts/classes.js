@@ -53,3 +53,36 @@ class TestGrandma extends PIXI.Graphics{
         this.rotation = angle;
     }
 }
+
+class Bullet extends PIXI.Graphics{
+    constructor(radius,x=0,y=0,direction=0,color=0xFFFFFF){
+        super();
+        this.beginFill(color);
+        this.drawCircle(x,y,radius);
+        this.endFill();
+        this.pivot.set(x,y);
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.direction = direction;
+
+        //Variables
+        this.mouseDir = app.renderer.plugins.interaction.mouse.global;
+        this.speed = 400;
+        this.isAlive = true;
+
+        //Normalize the distance
+        this.xDir = x - this.mouseDir.x;
+        this.yDir = y - this.mouseDir.y;
+        let magnitude = Math.sqrt(this.xDir*this.xDir + this.yDir*this.yDir);
+
+        this.xDir /= magnitude;
+        this.yDir /= magnitude;
+        Object.seal(this);
+    }
+
+    move(dt=1/60){
+        this.x -= this.xDir * this.speed * dt;
+        this.y -= this.yDir * this.speed * dt;
+    }
+}
