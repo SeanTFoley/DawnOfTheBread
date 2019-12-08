@@ -42,6 +42,11 @@ app.ticker.add(gameLoop);
 
 //Listen for the click event
 app.view.onclick = spawnBullet;
+
+//Spawn the enemy
+let br = new Bread(20, 50, grandma, 500, 100);
+breads.push(br);
+gameScene.addChild(br);
 }
 
 //Creates the game loop
