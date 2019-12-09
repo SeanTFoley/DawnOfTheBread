@@ -129,7 +129,7 @@ class Bread extends PIXI.Graphics{
     }
 
     move(dt=1/60){
-        this.x += this.xDir * this.speed * dt;
-        this.y += this.yDir * this.speed * dt;
+        this.x -= this.xDir * this.speed * dt;
+        this.y -= this.yDir * this.speed * dt;
     }
 }

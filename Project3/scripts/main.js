@@ -66,15 +66,41 @@ function gameLoop(){
             gameScene.removeChild(b);
             b.isAlive = false;
         }
+
+        //Detects collision with the breads
+        for(let br of breads){
+            if(rectsIntersect(br, b)){
+                gameScene.removeChild(br);
+                br.isAlive = false;
+                gameScene.removeChild(b);
+                b.isAlive = false;
+            }
+        }
     }
 
-    //clean up dead bullets
+    //Move the bread
+    for(let b of breads){
+        //b.move(dt);
+        if(rectsIntersect(b, grandma)){
+            gameScene.removeChild(b);
+            b.isAlive = false;
+        }
+    }
+    //clean up dead bullets and bread
     bullets = bullets.filter(b=>b.isAlive);
+    breads = breads.filter(b=>b.isAlive);
 }
 
 function spawnBullet(e){
     let b = new Bullet(5, grandma.x, grandma.y);
     bullets.push(b);
     gameScene.addChild(b);
+}
+
+// bounding box collision detection - it compares PIXI.Rectangles
+function rectsIntersect(a,b){
+    let ab = a.getBounds();
+    let bb = b.getBounds();
+    return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
 }
 
