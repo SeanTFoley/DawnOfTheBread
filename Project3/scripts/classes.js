@@ -102,9 +102,19 @@ class Bread extends PIXI.Graphics{
         this.rotation = 0;
 
         //Variables
-        this.speed = 100;
+        this.speed = 50;
         this.isAlive = true;
 
+        this.updateMovement(x,y);
+        Object.seal(this);
+    }
+
+    move(dt=1/60){
+        this.x -= this.xDir * this.speed * dt;
+        this.y -= this.yDir * this.speed * dt;
+    }
+
+    updateMovement(x,y){
         //Normalize the distance
         this.xDir = x - this.grandma.x;
         this.yDir = y - this.grandma.y;
@@ -112,8 +122,9 @@ class Bread extends PIXI.Graphics{
 
         this.xDir /= magnitude;
         this.yDir /= magnitude;
-        Object.seal(this);
+    }
 
+    updateRotation(grandma){
         //Update rotation
         let p1 = {
             x: this.x + 5,
@@ -126,10 +137,5 @@ class Bread extends PIXI.Graphics{
 
         let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
         this.rotation = angle;
-    }
-
-    move(dt=1/60){
-        this.x -= this.xDir * this.speed * dt;
-        this.y -= this.yDir * this.speed * dt;
     }
 }

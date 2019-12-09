@@ -42,11 +42,6 @@ app.ticker.add(gameLoop);
 
 //Listen for the click event
 app.view.onclick = spawnBullet;
-
-//Spawn the enemy
-let br = new Bread(20, 50, grandma, 500, 100);
-breads.push(br);
-gameScene.addChild(br);
 }
 
 //Creates the game loop
@@ -57,6 +52,14 @@ function gameLoop(){
 
     //Rotate grandma
     grandma.updateRotation();
+
+    //Spawn the enemies
+    if(breads.length < 10){
+        let br = new Bread(20, 50, grandma);
+        randomPosition(br);
+        breads.push(br);
+        gameScene.addChild(br);
+    }
 
     //Move the bullets
     for(let b of bullets){
@@ -80,7 +83,9 @@ function gameLoop(){
 
     //Move the bread
     for(let b of breads){
-        //b.move(dt);
+        b.updateRotation(grandma);
+        b.updateMovement(b.x, b.y);
+        b.move(dt);
         if(rectsIntersect(b, grandma)){
             gameScene.removeChild(b);
             b.isAlive = false;
@@ -104,3 +109,12 @@ function rectsIntersect(a,b){
     return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
 }
 
+//Get a random position for the breads
+function randomPosition(bread)
+{
+    let angle = Math.random()*Math.PI*2;
+    let radius = 500;
+
+    bread.x = Math.cos(angle)*radius + grandma.x;
+    bread.y = Math.sin(angle)*radius + grandma.y;
+}
