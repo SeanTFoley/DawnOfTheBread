@@ -87,11 +87,10 @@ class Bullet extends PIXI.Graphics{
 }
 
 class Bread extends PIXI.Graphics{
-    constructor(width,height,grandma,x=0,y=0,direction=0,color=0x0000FF){
+    constructor(width,height,grandma,lives,x=0,y=0,direction=0,color=0x0000FF){
         super();
-        this.beginFill(color);
-        this.drawRect(x-width/2,y-height/2,width,height);
-        this.endFill();
+        this.lives = lives;
+        this.FillColor(color,x,y,width,height);
         this.pivot.set(x,y);
         this.x = x;
         this.y = y;
@@ -102,6 +101,7 @@ class Bread extends PIXI.Graphics{
         this.rotation = 0;
 
         //Variables
+        this.lives = 3;
         this.speed = 50;
         this.isAlive = true;
 
@@ -137,5 +137,27 @@ class Bread extends PIXI.Graphics{
 
         let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
         this.rotation = angle;
+    }
+
+    updateLives(){
+        this.lives--;
+        if(this.lives==3){
+            //this.color=0x0000FF;
+            //this.FillColor(this.color,this.x,this.y,this.width,this.height);
+        }
+        else if(this.lives==2){
+            //this.color=0xFF00FF;
+            //this.FillColor(this.color,this.x,this.y,this.width,this.height);
+        }
+        else if(this.lives==1){
+            //this.color=0xFF0000;
+           // this.FillColor(this.color,this.x,this.y,this.width,this.height);
+        }
+    }
+
+    FillColor(color,x,y,width,height){
+        this.beginFill(color);
+        this.drawRect(x-width/2,y-height/2,width,height);
+        this.endFill();
     }
 }

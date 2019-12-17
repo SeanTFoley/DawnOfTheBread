@@ -55,7 +55,7 @@ function gameLoop(){
 
     //Spawn the enemies
     if(breads.length < 10){
-        let br = new Bread(20, 50, grandma);
+        let br = new Bread(20, 50, grandma,3);
         randomPosition(br);
         breads.push(br);
         gameScene.addChild(br);
@@ -73,8 +73,37 @@ function gameLoop(){
         //Detects collision with the breads
         for(let br of breads){
             if(rectsIntersect(br, b)){
-                gameScene.removeChild(br);
-                br.isAlive = false;
+                //br.updateLives();
+                let xpos = br.x;
+                let ypos = br.y;
+
+                if(br.lives == 3){
+                    //breads.pop(br);
+                    //br.clear();
+                    //let newBR = new Bread(20,50,grandma,2,xpos,ypos,0,0xFF00FF);
+                    //breads.push(br);
+                    //let newBR = new Bread(20,50,grandma,2,xpos,ypos);
+                    //breads.push(newBR);
+                    //gameScene.addChild(newBR);
+                    //gameScene.removeChild(br);
+                    //br.isAlive = false;
+                    br.lives = 2;
+                    console.log("hit");
+                }
+                else if(br.lives == 2){
+                    //let newBR = new Bread(20,50,grandma,1,xpos,ypos);
+                    //breads.push(newBR);
+                    //gameScene.addChild(newBR);
+                    //gameScene.removeChild(br);
+                    //br.isAlive = false;
+                    br.lives = 1;
+                }
+                else if(br.lives == 1){
+                    console.log("destroyed");
+                    gameScene.removeChild(br);
+                    br.isAlive = false;
+                }   
+
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
