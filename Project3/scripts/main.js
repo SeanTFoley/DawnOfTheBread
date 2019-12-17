@@ -20,6 +20,7 @@ let breads = [];
 let bullets = [];
 let gumDrops = [];
 let score = 0;
+let enemyCap = 5;
 let paused = true;
 
 PIXI.loader.load(setup);
@@ -54,7 +55,7 @@ function gameLoop(){
     grandma.updateRotation();
 
     //Spawn the enemies
-    if(breads.length < 10){
+    if(breads.length < enemyCap){
         let br = new Bread(20, 50, grandma,3);
         randomPosition(br);
         breads.push(br);
@@ -73,35 +74,14 @@ function gameLoop(){
         //Detects collision with the breads
         for(let br of breads){
             if(rectsIntersect(br, b)){
-                //br.updateLives();
-                let xpos = br.x;
-                let ypos = br.y;
 
-                if(br.lives == 3){
-                    //breads.pop(br);
-                    //br.clear();
-                    //let newBR = new Bread(20,50,grandma,2,xpos,ypos,0,0xFF00FF);
-                    //breads.push(br);
-                    //let newBR = new Bread(20,50,grandma,2,xpos,ypos);
-                    //breads.push(newBR);
-                    //gameScene.addChild(newBR);
-                    //gameScene.removeChild(br);
-                    //br.isAlive = false;
-                    br.lives = 2;
-                    console.log("hit");
-                }
-                else if(br.lives == 2){
-                    //let newBR = new Bread(20,50,grandma,1,xpos,ypos);
-                    //breads.push(newBR);
-                    //gameScene.addChild(newBR);
-                    //gameScene.removeChild(br);
-                    //br.isAlive = false;
-                    br.lives = 1;
-                }
-                else if(br.lives == 1){
-                    console.log("destroyed");
+                if(br.lives == 1){
                     gameScene.removeChild(br);
                     br.isAlive = false;
+                    score++;
+                }
+                else{
+                    br.lives--;
                 }   
 
                 gameScene.removeChild(b);
@@ -123,6 +103,12 @@ function gameLoop(){
     //clean up dead bullets and bread
     bullets = bullets.filter(b=>b.isAlive);
     breads = breads.filter(b=>b.isAlive);
+
+    //Update enemy cap
+    if(score > enemyCap){
+        enemyCap *= 2;
+        console.log(enemyCap);
+    }
 }
 
 function spawnBullet(e){
