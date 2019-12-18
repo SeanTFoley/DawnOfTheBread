@@ -20,6 +20,7 @@ let breads = [];
 let bullets = [];
 let gumDrops = [];
 let score = 0;
+let enemyCap = 5;
 let paused = true;
 
 PIXI.loader.load(setup);
@@ -74,8 +75,8 @@ function gameLoop() {
     grandma.updateRotation();
 
     //Spawn the enemies
-    if (breads.length < 10) {
-        let br = new Bread(20, 50, grandma);
+    if(breads.length < enemyCap){
+        let br = new Bread(20, 50, grandma,3);
         randomPosition(br);
         breads.push(br);
         gameScene.addChild(br);
@@ -91,10 +92,18 @@ function gameLoop() {
         }
 
         //Detects collision with the breads
-        for (let br of breads) {
-            if (rectsIntersect(br, b)) {
-                gameScene.removeChild(br);
-                br.isAlive = false;
+        for(let br of breads){
+            if(rectsIntersect(br, b)){
+
+                if(br.lives == 1){
+                    gameScene.removeChild(br);
+                    br.isAlive = false;
+                    score++;
+                }
+                else{
+                    br.lives--;
+                }   
+
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
@@ -112,8 +121,14 @@ function gameLoop() {
         }
     }
     //clean up dead bullets and bread
-    bullets = bullets.filter(b => b.isAlive);
-    breads = breads.filter(b => b.isAlive);
+    bullets = bullets.filter(b=>b.isAlive);
+    breads = breads.filter(b=>b.isAlive);
+
+    //Update enemy cap
+    if(score > enemyCap){
+        enemyCap *= 2;
+        console.log(enemyCap);
+    }
 }
 
 function spawnBullet(e) {
