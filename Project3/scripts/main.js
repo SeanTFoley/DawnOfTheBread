@@ -137,8 +137,8 @@ function gameLoop() {
     breads = breads.filter(b=>b.isAlive);
 
     //Update enemy cap
-    if(score > enemyCap){
-        enemyCap += 5;
+    if(score > enemyCap * 3){
+        enemyCap += 1;
     }    
     }
     
