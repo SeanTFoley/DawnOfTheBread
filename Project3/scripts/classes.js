@@ -78,6 +78,7 @@ class Bullet extends PIXI.Graphics{
         Object.seal(this);
     }
 
+    //Moves the bullet
     move(dt=1/60){
         this.x -= this.xDir * this.speed * dt;
         this.y -= this.yDir * this.speed * dt;
@@ -99,18 +100,20 @@ class Bread extends PIXI.Sprite{
 
         //Variables
         this.lives = 3;
-        this.speed = 20;
+        this.speed = 100;
         this.isAlive = true;
 
         this.updateMovement(x,y);
         Object.seal(this);
     }
 
+    //Moves the enemy
     move(dt=1/60){
         this.x -= this.xDir * this.speed * dt;
         this.y -= this.yDir * this.speed * dt;
     }
 
+    //Makes sure the movement is directed towards the grandma
     updateMovement(x,y){
         //Normalize the distance
         this.xDir = x - this.grandma.x;
@@ -121,6 +124,7 @@ class Bread extends PIXI.Sprite{
         this.yDir /= magnitude;
     }
 
+    //Updates the rotation to the grandma's position
     updateRotation(grandma){
         //Update rotation
         let p1 = {
@@ -136,22 +140,13 @@ class Bread extends PIXI.Sprite{
         this.rotation = angle;
     }
 
+    //Changes the tint of sprite based on how many lives are left
     updateLives(){
         if(this.lives==2){
             this.tint = 0xFFFF00;
-            //this.color=0xFF00FF;
-            //this.FillColor(this.color,this.x,this.y,this.width,this.height);
         }
         else if(this.lives==1){
             this.tint = 0xFF0000;
-            //this.color=0xFF0000;
-           // this.FillColor(this.color,this.x,this.y,this.width,this.height);
         }
-    }
-
-    FillColor(color,x,y,width,height){
-        this.beginFill(color);
-        this.drawRect(x-width/2,y-height/2,width,height);
-        this.endFill();
     }
 }

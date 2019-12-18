@@ -19,7 +19,7 @@ let stage;
 //game variables
 let startScene;
 let gameScene, scoreLabel;
-let gameOverScene;
+let gameOverScene, finalScore;
 
 let grandma;
 let breads = [];
@@ -112,8 +112,6 @@ function gameLoop() {
         b.move(dt);
         if(rectsIntersect(b, grandma)){
             endGame();
-            //gameScene.removeChild(b);
-            //b.isAlive = false;
         }
     }
 
@@ -132,6 +130,7 @@ function gameLoop() {
    
 }
 
+//Creates all of the UI elements
 function createLabelsandButtons(){
     let buttonStyle = new PIXI.TextStyle({
         fill: 0x000000,
@@ -198,21 +197,24 @@ function createLabelsandButtons(){
     endBackground.y = 0;
     gameOverScene.addChild(endBackground);
 
-    let overText = new PIXI.Text("Game Over");
-    overText.style = new PIXI.TextStyle({
-        fill: 0xFFFFFF,
-        fontSize: 96,
-        fontFamily: 'Futura',
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    overText.x = 40;
-    overText.y = 120;
-    gameOverScene.addChild(overText);
+    let gameOver = new PIXI.Sprite.fromImage(`images/GameOverText.png`);
+    gameOver.anchor.x = 0;
+    gameOver.anchor.y = 0;
+    gameOver.x = 0;
+    gameOver.y = sceneHeight/2 - 100;
+    gameOver.width = 800;
+    gameOver.height = 200;
+    gameOverScene.addChild(gameOver);
+
+    finalScore = new PIXI.Text();
+    finalScore.style = buttonStyle;
+    finalScore.x = sceneWidth/2 - 50;
+    finalScore.y = sceneHeight/2 + 150;
+    gameOverScene.addChild(finalScore);
 
     let backButton = new PIXI.Text("Back to Main Menu");
     backButton.style = buttonStyle;
-    backButton.x = 80;
+    backButton.x = sceneWidth/2 - backButton.width/2;
     backButton.y = sceneHeight - 100;
     backButton.interactive = true;
     backButton.buttonMode = true;
@@ -223,28 +225,40 @@ function createLabelsandButtons(){
 }
 
 //Function handling menu logic
+
+//Starts the game
 function startGame(){
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
 }
 
+//Ends the game
 function endGame(){
     startScene.visible = false;
     gameOverScene.visible = true;
     gameScene.visible = false;
+    for(let b of breads){
+        gameScene.removeChild(b);
+        b.isAlive = false;
+    }
+    breads = [];
 }
 
+//Goes back to the main menu
 function backToMain(){
     startScene.visible = true;
     gameOverScene.visible = false;
     gameScene.visible = false;
 }
 
+//Updates the the score UI
 function updateScore(){
     scoreLabel.text = `Score ${score}`;
+    finalScore.text = `Score ${score}`;
 }
 
+//Spawns bullets when fired
 function spawnBullet(e){
     let b = new Bullet(5, grandma.x, grandma.y);
     bullets.push(b);
