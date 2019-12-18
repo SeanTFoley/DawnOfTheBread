@@ -19,7 +19,7 @@ let stage;
 //game variables
 let startScene;
 let gameScene, scoreLabel;
-let gameOverScene, finalScore;
+let gameOverScene, finalScore, highScoreLabel, finalHighScoreLabel;
 
 let grandma;
 let breads = [];
@@ -30,6 +30,7 @@ let enemyCap = 5;
 let paused = true;
 let shootSound;
 let hitSound;
+let highScore = localStorage.getItem('highscore') ? JSON.parse(localStorage.getItem('highscore')) : 0;
 
 function setup() {
     //Setup the stage
@@ -199,8 +200,14 @@ function createLabelsandButtons(){
     scoreLabel = new PIXI.Text();
     scoreLabel.style = textStyle;
     scoreLabel.x = 5;
-    scoreLabel.y = 5;
+    scoreLabel.y = 40;
     gameScene.addChild(scoreLabel);
+
+    highScoreLabel = new PIXI.Text();
+    highScoreLabel.style = textStyle;
+    highScoreLabel.x = 5;
+    highScoreLabel.y = 5;
+    gameScene.addChild(highScoreLabel);
 
     //Set up game over scene
     let endBackground = new PIXI.Sprite.fromImage('images/TitleBackground.png');
@@ -218,6 +225,12 @@ function createLabelsandButtons(){
     gameOver.width = 800;
     gameOver.height = 200;
     gameOverScene.addChild(gameOver);
+
+    finalHighScoreLabel = new PIXI.Text();
+    finalHighScoreLabel.style = buttonStyle;
+    finalHighScoreLabel.x = sceneWidth/2 - 60;
+    finalHighScoreLabel.y = sceneHeight/2 + 100;
+    gameOverScene.addChild(finalHighScoreLabel);
 
     finalScore = new PIXI.Text();
     finalScore.style = buttonStyle;
@@ -264,6 +277,13 @@ function backToMain(){
 function updateScore(){
     scoreLabel.text = `Score ${score}`;
     finalScore.text = `Score ${score}`;
+    if(score > highScore)
+    {
+        highScore = score;
+        localStorage.setItem('highscore', JSON.stringify(highScore));
+    }
+    highScoreLabel.text = `Highscore ${highScore}`;
+    finalHighScoreLabel.text = `Highscore ${highScore}`;
 }
 
 function spawnBullet(e){
