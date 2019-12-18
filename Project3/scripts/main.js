@@ -246,8 +246,12 @@ function backToMain(){
 }
 
 function updateScore(){
+<<<<<<< HEAD
     //scoreLabel.text = `Score ${score}`;
     //finalScore.text = `Score ${score}`;
+=======
+    scoreLabel.text = `Score ${score}`;
+>>>>>>> parent of 8189385... Commented methods
 }
 
 function spawnBullet(e){
