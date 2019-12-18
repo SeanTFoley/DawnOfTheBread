@@ -256,6 +256,7 @@ function startGame(){
     gameOverScene.visible = false;
     gameScene.visible = true;
     score = 0;
+    enemyCap = 5;
 }
 
 function endGame(){
