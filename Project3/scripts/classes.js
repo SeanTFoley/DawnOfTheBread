@@ -52,7 +52,7 @@ class TestGrandma extends PIXI.Sprite{
 }
 
 class Bullet extends PIXI.Graphics{
-    constructor(radius,x=0,y=0,direction=0,color=0xFFFFFF){
+    constructor(radius,x=0,y=0,direction=0,color=0x000000){
         super();
         this.beginFill(color);
         this.drawCircle(x,y,radius);
