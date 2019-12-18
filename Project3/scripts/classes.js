@@ -100,7 +100,7 @@ class Bread extends PIXI.Sprite{
 
         //Variables
         this.lives = 3;
-        this.speed = 100;
+        this.speed = 20;
         this.isAlive = true;
 
         this.updateMovement(x,y);

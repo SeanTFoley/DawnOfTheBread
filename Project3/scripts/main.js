@@ -37,11 +37,11 @@ function setup() {
 
     //Create the start scene
     startScene = new PIXI.Container();
+    startScene.visible = true;
     stage.addChild(startScene);
 
     //Create the game scene
     gameScene = new PIXI.Container();
-    gameScene.visible = true;
     stage.addChild(gameScene);
 
     //Create game objects
@@ -57,7 +57,8 @@ function setup() {
 
 //Creates the game loop
 function gameLoop() {
-    //Calculate delta time
+    if(gameScene.visible){
+        //Calculate delta time
     let dt = 1 / app.ticker.FPS;
     if (dt > 1 / 12) dt = 1 / 12;
 
@@ -113,6 +114,8 @@ function gameLoop() {
     if(score > enemyCap){
         enemyCap += 5;
     }    
+    }
+    
    
 }
 
@@ -240,8 +243,8 @@ function backToMain(){
 
 //Updates the the score UI
 function updateScore(){
-    scoreLabel.text = `Score ${score}`;
-    finalScore.text = `Score ${score}`;
+    //scoreLabel.text = `Score ${score}`;
+    //finalScore.text = `Score ${score}`;
 }
 
 //Spawns bullets when fired
