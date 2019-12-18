@@ -19,7 +19,7 @@ let stage;
 //game variables
 let startScene;
 let gameScene, scoreLabel;
-let gameOverScene, finalScore;
+let gameOverScene, finalScore, highScoreLabel;
 
 let grandma;
 let breads = [];
@@ -30,6 +30,7 @@ let enemyCap = 5;
 let paused = true;
 let shootSound;
 let hitSound;
+let highScore = localStorage.getItem('highscore') ? JSON.parse(localStorage.getItem('highsscore')) : 0;
 
 function setup() {
     //Setup the stage
@@ -202,6 +203,12 @@ function createLabelsandButtons(){
     scoreLabel.y = 5;
     gameScene.addChild(scoreLabel);
 
+    highScoreLabel = new PIXI.Text();
+    highScoreLabel.style = textStyle;
+    scoreLabel.x = 5;
+    scoreLabel.y = 5;
+    gameScene.addChild(highScoreLabel);
+
     //Set up game over scene
     let endBackground = new PIXI.Sprite.fromImage('images/TitleBackground.png');
     endBackground.anchor.x = 0;
@@ -259,6 +266,11 @@ function backToMain(){
 function updateScore(){
     scoreLabel.text = `Score ${score}`;
     finalScore.text = `Score ${score}`;
+    if(score > highScore)
+    {
+        highScore = score;
+        localStorage.setItem('highscore', JSON.stringify(highScore));
+    }
 }
 
 function spawnBullet(e){
