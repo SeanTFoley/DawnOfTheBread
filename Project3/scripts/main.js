@@ -29,6 +29,8 @@ let score = 0;
 let enemyCap = 5;
 let paused = true;
 
+PIXI.loader.load(setup);
+
 function setup() {
     //Setup the stage
     stage = app.stage;
@@ -39,17 +41,11 @@ function setup() {
 
     //Create the game scene
     gameScene = new PIXI.Container();
-    gameScene.visible = false;
+    gameScene.visible = true;
     stage.addChild(gameScene);
 
-    gameOverScene = new PIXI.Container();
-    gameOverScene.visible = false;
-    stage.addChild(gameOverScene);
-
-    //Create the labels for each scene
-    createLabelsandButtons();
     //Create game objects
-    grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
+    grandma = new TestGrandma(50, 50, sceneWidth / 2, sceneHeight / 2);
     gameScene.addChild(grandma);
 
     //Start the game loop
@@ -61,8 +57,7 @@ function setup() {
 
 //Creates the game loop
 function gameLoop() {
-    if(gameScene.visible){
-         //Calculate delta time
+    //Calculate delta time
     let dt = 1 / app.ticker.FPS;
     if (dt > 1 / 12) dt = 1 / 12;
 
@@ -70,8 +65,8 @@ function gameLoop() {
     grandma.updateRotation();
 
     //Spawn the enemies
-    if(breads.length < enemyCap){
-        let br = new Bread(20, 50, grandma,3);
+    if (breads.length < 10) {
+        let br = new Bread(20, 50, grandma);
         randomPosition(br);
         breads.push(br);
         gameScene.addChild(br);
@@ -87,18 +82,10 @@ function gameLoop() {
         }
 
         //Detects collision with the breads
-        for(let br of breads){
-            if(rectsIntersect(br, b)){
-
-                if(br.lives == 1){
-                    gameScene.removeChild(br);
-                    br.isAlive = false;
-                    score++;
-                }
-                else{
-                    br.lives--;
-                    br.updateLives();
-                }   
+        for (let br of breads) {
+            if (rectsIntersect(br, b)) {
+                gameScene.removeChild(br);
+                br.isAlive = false;
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
@@ -125,8 +112,7 @@ function gameLoop() {
     //Update enemy cap
     if(score > enemyCap){
         enemyCap += 5;
-    }
-    }
+    }    
    
 }
 
