@@ -46,6 +46,10 @@ function setup() {
     gameScene = new PIXI.Container();
     stage.addChild(gameScene);
 
+    //Create the game over scene
+    gameOverScene = new PIXI.Container();
+    stage.addChild(gameOverScene);
+
     //Create game objects
     grandma = new TestGrandma(50, 50, sceneWidth / 2, sceneHeight / 2);
     gameScene.addChild(grandma);
