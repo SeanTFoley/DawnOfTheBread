@@ -31,23 +31,28 @@ let paused = true;
 let shootSound;
 let hitSound;
 
-PIXI.loader.load(setup);
-
 function setup() {
     //Setup the stage
     stage = app.stage;
 
     //Create the start scene
     startScene = new PIXI.Container();
+    startScene.visible = true;
     stage.addChild(startScene);
 
     //Create the game scene
     gameScene = new PIXI.Container();
-    gameScene.visible = true;
+    gameScene.visible = false;
     stage.addChild(gameScene);
 
+    gameOverScene = new PIXI.Container();
+    gameOverScene.visible = false;
+    stage.addChild(gameOverScene);
+
+    //Create the labels for each scene
+    createLabelsandButtons();
     //Create game objects
-    grandma = new TestGrandma(50, 50, sceneWidth / 2, sceneHeight / 2);
+    grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
     gameScene.addChild(grandma);
 
     //Start the game loop
@@ -67,7 +72,8 @@ function setup() {
 
 //Creates the game loop
 function gameLoop() {
-    //Calculate delta time
+    if(gameScene.visible){
+        //Calculate delta time
     let dt = 1 / app.ticker.FPS;
     if (dt > 1 / 12) dt = 1 / 12;
 
@@ -75,8 +81,8 @@ function gameLoop() {
     grandma.updateRotation();
 
     //Spawn the enemies
-    if (breads.length < 10) {
-        let br = new Bread(20, 50, grandma);
+    if(breads.length < enemyCap){
+        let br = new Bread(20, 50, grandma,3);
         randomPosition(br);
         breads.push(br);
         gameScene.addChild(br);
@@ -92,11 +98,18 @@ function gameLoop() {
         }
 
         //Detects collision with the breads
-        for (let br of breads) {
-            if (rectsIntersect(br, b)) {
+        for(let br of breads){
+            if(rectsIntersect(br, b)){
                 hitSound.play();
-                gameScene.removeChild(br);
-                br.isAlive = false;
+                if(br.lives == 1){
+                    gameScene.removeChild(br);
+                    br.isAlive = false;
+                    score++;
+                }
+                else{
+                    br.lives--;
+                    br.updateLives();
+                }   
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
@@ -110,6 +123,8 @@ function gameLoop() {
         b.move(dt);
         if(rectsIntersect(b, grandma)){
             endGame();
+            //gameScene.removeChild(b);
+            //b.isAlive = false;
         }
     }
 
@@ -124,10 +139,11 @@ function gameLoop() {
     if(score > enemyCap){
         enemyCap += 5;
     }    
+    }
+    
    
 }
 
-//Creates all of the UI elements
 function createLabelsandButtons(){
     let buttonStyle = new PIXI.TextStyle({
         fill: 0x000000,
@@ -222,40 +238,29 @@ function createLabelsandButtons(){
 }
 
 //Function handling menu logic
-
-//Starts the game
 function startGame(){
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
 }
 
-//Ends the game
 function endGame(){
     startScene.visible = false;
     gameOverScene.visible = true;
     gameScene.visible = false;
-    for(let b of breads){
-        gameScene.removeChild(b);
-        b.isAlive = false;
-    }
-    breads = [];
 }
 
-//Goes back to the main menu
 function backToMain(){
     startScene.visible = true;
     gameOverScene.visible = false;
     gameScene.visible = false;
 }
 
-//Updates the the score UI
 function updateScore(){
     scoreLabel.text = `Score ${score}`;
     finalScore.text = `Score ${score}`;
 }
 
-//Spawns bullets when fired
 function spawnBullet(e){
     let b = new Bullet(5, grandma.x, grandma.y);
     bullets.push(b);
