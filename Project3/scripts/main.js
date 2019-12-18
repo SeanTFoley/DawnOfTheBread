@@ -8,6 +8,12 @@ gameDiv.appendChild(app.view);
 const sceneWidth = app.view.width;
 const sceneHeight = app.view.height;
 
+//pre-load the images
+PIXI.loader.
+add(["images/Grandma.png","images/Bread.png"]).
+on("progress",e=>{console.log(`progress=${e.progress}`)}).
+load(setup);
+
 let stage;
 
 //game variables
@@ -22,8 +28,6 @@ let gumDrops = [];
 let score = 0;
 let enemyCap = 5;
 let paused = true;
-
-PIXI.loader.load(setup);
 
 function setup() {
     //Setup the stage
@@ -93,6 +97,7 @@ function gameLoop() {
                 }
                 else{
                     br.lives--;
+                    br.updateLives();
                 }   
                 gameScene.removeChild(b);
                 b.isAlive = false;
@@ -164,6 +169,13 @@ function createLabelsandButtons(){
     startScene.addChild(startButton);
 
     //Set up game scene
+    let gameBackground = new PIXI.Sprite.fromImage('images/GameBackground.png');
+    gameBackground.anchor.x = 0;
+    gameBackground.anchor.y = 0;
+    gameBackground.x = 0;
+    gameBackground.y = 0;
+    gameScene.addChild(gameBackground);
+
     let textStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 18,
@@ -179,6 +191,13 @@ function createLabelsandButtons(){
     gameScene.addChild(scoreLabel);
 
     //Set up game over scene
+    let endBackground = new PIXI.Sprite.fromImage('images/TitleBackground.png');
+    endBackground.anchor.x = 0;
+    endBackground.anchor.y = 0;
+    endBackground.x = 0;
+    endBackground.y = 0;
+    gameOverScene.addChild(endBackground);
+
     let overText = new PIXI.Text("Game Over");
     overText.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
