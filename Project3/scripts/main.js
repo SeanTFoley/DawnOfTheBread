@@ -242,12 +242,17 @@ function startGame(){
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
+    score = 0;
 }
 
 function endGame(){
     startScene.visible = false;
     gameOverScene.visible = true;
     gameScene.visible = false;
+    for(let b of breads){
+        gameScene.removeChild(b);
+    }
+    breads = [];
 }
 
 function backToMain(){
