@@ -28,6 +28,8 @@ let gumDrops = [];
 let score = 0;
 let enemyCap = 5;
 let paused = true;
+let shootSound;
+let hitSound;
 
 PIXI.loader.load(setup);
 
@@ -53,6 +55,14 @@ function setup() {
 
     //Listen for the click event
     app.view.onclick = spawnBullet;
+
+    shootSound = new Howl({
+        src: ['sounds/ShootSound.wav']
+    });
+
+    hitSound = new Howl({
+        src: ['sounds/HitSound.wav']
+    });
 }
 
 //Creates the game loop
@@ -85,6 +95,7 @@ function gameLoop() {
         //Detects collision with the breads
         for (let br of breads) {
             if (rectsIntersect(br, b)) {
+                hitSound.play();
                 gameScene.removeChild(br);
                 br.isAlive = false;
                 gameScene.removeChild(b);
@@ -252,6 +263,7 @@ function spawnBullet(e){
     let b = new Bullet(5, grandma.x, grandma.y);
     bullets.push(b);
     gameScene.addChild(b);
+    shootSound.play();
 }
 
 // bounding box collision detection - it compares PIXI.Rectangles
