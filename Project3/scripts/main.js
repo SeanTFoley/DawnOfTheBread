@@ -190,7 +190,7 @@ function createLabelsandButtons(){
 
     let textStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
-        fontSize: 18,
+        fontSize: 30,
         fontFamily: "Futura",
         stroke: 0xFF0000,
         strokeThickness: 4
