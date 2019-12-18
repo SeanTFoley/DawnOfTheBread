@@ -1,5 +1,5 @@
 "use strict";
-const app = new PIXI.Application(600,600);
+const app = new PIXI.Application(600, 600);
 
 let gameDiv = document.querySelector("#game");
 gameDiv.appendChild(app.view);
@@ -25,7 +25,7 @@ let paused = true;
 
 PIXI.loader.load(setup);
 
-function setup(){
+function setup() {
     //Setup the stage
     stage = app.stage;
 
@@ -56,10 +56,10 @@ function setup(){
 }
 
 //Creates the game loop
-function gameLoop(){
+function gameLoop() {
     //Calculate delta time
-    let dt = 1/app.ticker.FPS;
-        if(dt > 1/12) dt=1/12;
+    let dt = 1 / app.ticker.FPS;
+    if (dt > 1 / 12) dt = 1 / 12;
 
     //Rotate grandma
     grandma.updateRotation();
@@ -73,10 +73,10 @@ function gameLoop(){
     }
 
     //Move the bullets
-    for(let b of bullets){
+    for (let b of bullets) {
         b.move(dt);
 
-        if(b.x<-10 || b.x>sceneWidth+10 || b.y<-10 || b.y>sceneHeight+10){
+        if (b.x < -10 || b.x > sceneWidth + 10 || b.y < -10 || b.y > sceneHeight + 10) {
             gameScene.removeChild(b);
             b.isAlive = false;
         }
@@ -100,7 +100,7 @@ function gameLoop(){
     }
 
     //Move the bread
-    for(let b of breads){
+    for (let b of breads) {
         b.updateRotation(grandma);
         b.updateMovement(b.x, b.y);
         b.move(dt);
@@ -227,18 +227,17 @@ function spawnBullet(e){
 }
 
 // bounding box collision detection - it compares PIXI.Rectangles
-function rectsIntersect(a,b){
+function rectsIntersect(a, b) {
     let ab = a.getBounds();
     let bb = b.getBounds();
     return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
 }
 
 //Get a random position for the breads
-function randomPosition(bread)
-{
-    let angle = Math.random()*Math.PI*2;
+function randomPosition(bread) {
+    let angle = Math.random() * Math.PI * 2;
     let radius = 500;
 
-    bread.x = Math.cos(angle)*radius + grandma.x;
-    bread.y = Math.sin(angle)*radius + grandma.y;
+    bread.x = Math.cos(angle) * radius + grandma.x;
+    bread.y = Math.sin(angle) * radius + grandma.y;
 }
