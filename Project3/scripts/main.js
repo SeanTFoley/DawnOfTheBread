@@ -29,20 +29,30 @@ function setup(){
     //Setup the stage
     stage = app.stage;
 
+    //Create the start scene
+    startScene = new PIXI.Container();
+    stage.addChild(startScene);
+
     //Create the game scene
-gameScene = new PIXI.Container();
-gameScene.visible = true;
-stage.addChild(gameScene);
+    gameScene = new PIXI.Container();
+    gameScene.visible = false;
+    stage.addChild(gameScene);
 
-//Create game objects
-grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
-gameScene.addChild(grandma);
+    gameOverScene = new PIXI.Container();
+    gameOverScene.visible = false;
+    stage.addChild(gameOverScene);
 
-//Start the game loop
-app.ticker.add(gameLoop);
+    //Create the labels for each scene
+    createLabelsandButtons();
+    //Create game objects
+    grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
+    gameScene.addChild(grandma);
 
-//Listen for the click event
-app.view.onclick = spawnBullet;
+    //Start the game loop
+    app.ticker.add(gameLoop);
+
+    //Listen for the click event
+    app.view.onclick = spawnBullet;
 }
 
 //Creates the game loop
@@ -83,7 +93,6 @@ function gameLoop(){
                 else{
                     br.lives--;
                 }   
-
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
@@ -96,10 +105,15 @@ function gameLoop(){
         b.updateMovement(b.x, b.y);
         b.move(dt);
         if(rectsIntersect(b, grandma)){
-            gameScene.removeChild(b);
-            b.isAlive = false;
+            endGame();
+            //gameScene.removeChild(b);
+            //b.isAlive = false;
         }
     }
+
+    //Update score
+    updateScore();
+
     //clean up dead bullets and bread
     bullets = bullets.filter(b=>b.isAlive);
     breads = breads.filter(b=>b.isAlive);
@@ -109,6 +123,101 @@ function gameLoop(){
         enemyCap *= 2;
         console.log(enemyCap);
     }
+}
+
+function createLabelsandButtons(){
+    let buttonStyle = new PIXI.TextStyle({
+        fill: 0xFF0000,
+        fontsize: 48,
+        fontFamily: "Futura"
+    });
+
+    //Set up start scene
+    let startLabel = new PIXI.Text("Dawn of the Bread");
+    startLabel.style = new PIXI.TextStyle({
+        fill: 0xFFFFFF,
+        fontSize: 96,
+        fontFamily: 'Futura',
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    startLabel.x = 40;
+    startLabel.y = 120;
+    startScene.addChild(startLabel);
+
+    //Start button
+    let startButton = new PIXI.Text("Play");
+    startButton.style = buttonStyle;
+    startButton.x = 80;
+    startButton.y = sceneHeight - 100;
+    startButton.interactive = true;
+    startButton.buttonMode = true;
+    startButton.on("pointerup",startGame);
+    startButton.on('pointerover',e=>e.target.alpha = 0.7);
+    startButton.on('pointerout',e=>e.currentTarget.alpha = 1.0);
+    startScene.addChild(startButton);
+
+    //Set up game scene
+    let textStyle = new PIXI.TextStyle({
+        fill:0xFFFFFF,
+        fontSize: 18,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 4
+    });
+
+    scoreLabel = new PIXI.Text();
+    scoreLabel.style = textStyle;
+    scoreLabel.x = 5;
+    scoreLabel.y = 5;
+    gameScene.addChild(scoreLabel);
+
+    //Set up game over scene
+    let overText = new PIXI.Text("Game Over");
+    overText.style = new PIXI.TextStyle({
+        fill: 0xFFFFFF,
+        fontSize: 96,
+        fontFamily: 'Futura',
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    overText.x = 40;
+    overText.y = 120;
+    gameOverScene.addChild(overText);
+
+    let backButton = new PIXI.Text("Back to Main Menu");
+    backButton.style = buttonStyle;
+    backButton.x = 80;
+    backButton.y = sceneHeight - 100;
+    backButton.interactive = true;
+    backButton.buttonMode = true;
+    backButton.on("pointerup",backToMain);
+    backButton.on('pointerover',e=>e.target.alpha = 0.7);
+    backButton.on('pointerout',e=>e.currentTarget.alpha = 1.0);
+    gameOverScene.addChild(backButton);
+}
+
+//Function handling menu logic
+function startGame(){
+    startScene.visible = false;
+    gameOverScene.visible = false;
+    gameScene.visible = true;
+}
+
+function endGame(){
+    startScene.visible = false;
+    gameOverScene.visible = true;
+    gameScene.visible = false;
+}
+
+function backToMain(){
+    startScene.visible = true;
+    gameOverScene.visible = false;
+    gameScene.visible = false;
+}
+
+function updateScore(){
+    scoreLabel.text = `Score ${score}`;
 }
 
 function spawnBullet(e){

@@ -102,7 +102,7 @@ class Bread extends PIXI.Graphics{
 
         //Variables
         this.lives = 3;
-        this.speed = 50;
+        this.speed = 20;
         this.isAlive = true;
 
         this.updateMovement(x,y);
