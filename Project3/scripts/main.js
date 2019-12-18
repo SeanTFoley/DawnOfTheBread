@@ -29,6 +29,8 @@ let score = 0;
 let enemyCap = 5;
 let paused = true;
 
+PIXI.loader.load(setup);
+
 function setup() {
     //Setup the stage
     stage = app.stage;
@@ -39,17 +41,11 @@ function setup() {
 
     //Create the game scene
     gameScene = new PIXI.Container();
-    gameScene.visible = false;
+    gameScene.visible = true;
     stage.addChild(gameScene);
 
-    gameOverScene = new PIXI.Container();
-    gameOverScene.visible = false;
-    stage.addChild(gameOverScene);
-
-    //Create the labels for each scene
-    createLabelsandButtons();
     //Create game objects
-    grandma = new TestGrandma(50, 50,sceneWidth/2, sceneHeight/2);
+    grandma = new TestGrandma(50, 50, sceneWidth / 2, sceneHeight / 2);
     gameScene.addChild(grandma);
 
     //Start the game loop
@@ -61,8 +57,7 @@ function setup() {
 
 //Creates the game loop
 function gameLoop() {
-    if(gameScene.visible){
-         //Calculate delta time
+    //Calculate delta time
     let dt = 1 / app.ticker.FPS;
     if (dt > 1 / 12) dt = 1 / 12;
 
@@ -70,8 +65,8 @@ function gameLoop() {
     grandma.updateRotation();
 
     //Spawn the enemies
-    if(breads.length < enemyCap){
-        let br = new Bread(20, 50, grandma,3);
+    if (breads.length < 10) {
+        let br = new Bread(20, 50, grandma);
         randomPosition(br);
         breads.push(br);
         gameScene.addChild(br);
@@ -87,18 +82,10 @@ function gameLoop() {
         }
 
         //Detects collision with the breads
-        for(let br of breads){
-            if(rectsIntersect(br, b)){
-
-                if(br.lives == 1){
-                    gameScene.removeChild(br);
-                    br.isAlive = false;
-                    score++;
-                }
-                else{
-                    br.lives--;
-                    br.updateLives();
-                }   
+        for (let br of breads) {
+            if (rectsIntersect(br, b)) {
+                gameScene.removeChild(br);
+                br.isAlive = false;
                 gameScene.removeChild(b);
                 b.isAlive = false;
             }
@@ -110,10 +97,9 @@ function gameLoop() {
         b.updateRotation(grandma);
         b.updateMovement(b.x, b.y);
         b.move(dt);
-        if(rectsIntersect(b, grandma)){
-            endGame();
-            //gameScene.removeChild(b);
-            //b.isAlive = false;
+        if (rectsIntersect(b, grandma)) {
+            gameScene.removeChild(b);
+            b.isAlive = false;
         }
     }
 
@@ -121,131 +107,11 @@ function gameLoop() {
     updateScore();
 
     //clean up dead bullets and bread
-    bullets = bullets.filter(b=>b.isAlive);
-    breads = breads.filter(b=>b.isAlive);
-
-    //Update enemy cap
-    if(score > enemyCap){
-        enemyCap += 5;
-    }
-    }
-   
+    bullets = bullets.filter(b => b.isAlive);
+    breads = breads.filter(b => b.isAlive);
 }
 
-function createLabelsandButtons(){
-    let buttonStyle = new PIXI.TextStyle({
-        fill: 0x000000,
-        fontsize: 100,
-        fontFamily: "Futura"
-    });
-
-    //Set up start scene
-    let background = new PIXI.Sprite.fromImage('images/TitleBackground.png');
-    background.anchor.x = 0;
-    background.anchor.y = 0;
-    background.x = 0;
-    background.y = 0;
-    startScene.addChild(background);
-
-    let title = new PIXI.Sprite.fromImage('images/title.png');
-    title.anchor.x = title.width/2;
-    title.anchor.y = title.height/2;
-    title.x = sceneWidth/2;
-    title.y = sceneHeight/2 + 40;
-    title.width = 500;
-    title.height = 300;
-    startScene.addChild(title);
-
-    //Start button
-    let startButton = new PIXI.Text("Play");
-    startButton.style = buttonStyle;
-    startButton.x = sceneWidth/2 - startButton.width/2;
-    startButton.y = sceneHeight - 90;
-    startButton.interactive = true;
-    startButton.buttonMode = true;
-    startButton.on("pointerup",startGame);
-    startButton.on('pointerover',e=>e.target.alpha = 0.7);
-    startButton.on('pointerout',e=>e.currentTarget.alpha = 1.0);
-    startScene.addChild(startButton);
-
-    //Set up game scene
-    let gameBackground = new PIXI.Sprite.fromImage('images/GameBackground.png');
-    gameBackground.anchor.x = 0;
-    gameBackground.anchor.y = 0;
-    gameBackground.x = 0;
-    gameBackground.y = 0;
-    gameScene.addChild(gameBackground);
-
-    let textStyle = new PIXI.TextStyle({
-        fill:0xFFFFFF,
-        fontSize: 18,
-        fontFamily: "Futura",
-        stroke: 0xFF0000,
-        strokeThickness: 4
-    });
-
-    scoreLabel = new PIXI.Text();
-    scoreLabel.style = textStyle;
-    scoreLabel.x = 5;
-    scoreLabel.y = 5;
-    gameScene.addChild(scoreLabel);
-
-    //Set up game over scene
-    let endBackground = new PIXI.Sprite.fromImage('images/TitleBackground.png');
-    endBackground.anchor.x = 0;
-    endBackground.anchor.y = 0;
-    endBackground.x = 0;
-    endBackground.y = 0;
-    gameOverScene.addChild(endBackground);
-
-    let overText = new PIXI.Text("Game Over");
-    overText.style = new PIXI.TextStyle({
-        fill: 0xFFFFFF,
-        fontSize: 96,
-        fontFamily: 'Futura',
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    overText.x = 40;
-    overText.y = 120;
-    gameOverScene.addChild(overText);
-
-    let backButton = new PIXI.Text("Back to Main Menu");
-    backButton.style = buttonStyle;
-    backButton.x = 80;
-    backButton.y = sceneHeight - 100;
-    backButton.interactive = true;
-    backButton.buttonMode = true;
-    backButton.on("pointerup",backToMain);
-    backButton.on('pointerover',e=>e.target.alpha = 0.7);
-    backButton.on('pointerout',e=>e.currentTarget.alpha = 1.0);
-    gameOverScene.addChild(backButton);
-}
-
-//Function handling menu logic
-function startGame(){
-    startScene.visible = false;
-    gameOverScene.visible = false;
-    gameScene.visible = true;
-}
-
-function endGame(){
-    startScene.visible = false;
-    gameOverScene.visible = true;
-    gameScene.visible = false;
-}
-
-function backToMain(){
-    startScene.visible = true;
-    gameOverScene.visible = false;
-    gameScene.visible = false;
-}
-
-function updateScore(){
-    scoreLabel.text = `Score ${score}`;
-}
-
-function spawnBullet(e){
+function spawnBullet(e) {
     let b = new Bullet(5, grandma.x, grandma.y);
     bullets.push(b);
     gameScene.addChild(b);
