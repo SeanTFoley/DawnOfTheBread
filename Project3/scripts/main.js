@@ -57,7 +57,8 @@ function setup() {
 
 //Creates the game loop
 function gameLoop() {
-    //Calculate delta time
+    if(gameScene.visible){
+         //Calculate delta time
     let dt = 1 / app.ticker.FPS;
     if (dt > 1 / 12) dt = 1 / 12;
 
@@ -120,36 +121,41 @@ function gameLoop() {
 
     //Update enemy cap
     if(score > enemyCap){
-        enemyCap *= 2;
-        console.log(enemyCap);
+        enemyCap += 5;
     }
+    }
+   
 }
 
 function createLabelsandButtons(){
     let buttonStyle = new PIXI.TextStyle({
-        fill: 0xFF0000,
-        fontsize: 48,
+        fill: 0x000000,
+        fontsize: 100,
         fontFamily: "Futura"
     });
 
     //Set up start scene
-    let startLabel = new PIXI.Text("Dawn of the Bread");
-    startLabel.style = new PIXI.TextStyle({
-        fill: 0xFFFFFF,
-        fontSize: 96,
-        fontFamily: 'Futura',
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    startLabel.x = 40;
-    startLabel.y = 120;
-    startScene.addChild(startLabel);
+    let background = new PIXI.Sprite.fromImage('images/TitleBackground.png');
+    background.anchor.x = 0;
+    background.anchor.y = 0;
+    background.x = 0;
+    background.y = 0;
+    startScene.addChild(background);
+
+    let title = new PIXI.Sprite.fromImage('images/title.png');
+    title.anchor.x = title.width/2;
+    title.anchor.y = title.height/2;
+    title.x = sceneWidth/2;
+    title.y = sceneHeight/2 + 40;
+    title.width = 500;
+    title.height = 300;
+    startScene.addChild(title);
 
     //Start button
     let startButton = new PIXI.Text("Play");
     startButton.style = buttonStyle;
-    startButton.x = 80;
-    startButton.y = sceneHeight - 100;
+    startButton.x = sceneWidth/2 - startButton.width/2;
+    startButton.y = sceneHeight - 90;
     startButton.interactive = true;
     startButton.buttonMode = true;
     startButton.on("pointerup",startGame);
