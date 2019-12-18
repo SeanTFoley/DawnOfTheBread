@@ -220,9 +220,9 @@ function createLabelsandButtons(){
     let gameOver = new PIXI.Sprite.fromImage(`images/GameOverText.png`);
     gameOver.anchor.x = 0;
     gameOver.anchor.y = 0;
-    gameOver.x = 0;
+    gameOver.x = 25;
     gameOver.y = sceneHeight/2 - 100;
-    gameOver.width = 800;
+    gameOver.width = 750;
     gameOver.height = 200;
     gameOverScene.addChild(gameOver);
 
