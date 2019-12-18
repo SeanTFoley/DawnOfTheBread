@@ -8,6 +8,12 @@ gameDiv.appendChild(app.view);
 const sceneWidth = app.view.width;
 const sceneHeight = app.view.height;
 
+//pre-load the images
+PIXI.loader.
+add(["images/Grandma.png","images/Bread.png"]).
+on("progress",e=>{console.log(`progress=${e.progress}`)}).
+load(setup);
+
 let stage;
 
 //game variables
@@ -22,8 +28,6 @@ let gumDrops = [];
 let score = 0;
 let enemyCap = 5;
 let paused = true;
-
-PIXI.loader.load(setup);
 
 function setup() {
     //Setup the stage
@@ -93,6 +97,7 @@ function gameLoop() {
                 }
                 else{
                     br.lives--;
+                    br.updateLives();
                 }   
                 gameScene.removeChild(b);
                 b.isAlive = false;

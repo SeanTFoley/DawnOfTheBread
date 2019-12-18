@@ -23,13 +23,10 @@ class Grandma extends GameObject{
     }
 }
 
-class TestGrandma extends PIXI.Graphics{
+class TestGrandma extends PIXI.Sprite{
     constructor(width,height,x=0,y=0,direction=0,color=0xFF0000){
-        super();
-        this.beginFill(color);
-        this.drawRect(x - width/2,y - height/2,width,height);
-        this.endFill();
-        this.pivot.set(x,y);
+        super(PIXI.loader.resources["images/Grandma.png"].texture);
+        this.pivot.set(this.width/2,this.height/2);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -49,6 +46,7 @@ class TestGrandma extends PIXI.Graphics{
 
         //Find the angle
         let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        angle += (90 * (Math.PI/180));
         this.rotation = angle;
     }
 }
@@ -86,12 +84,11 @@ class Bullet extends PIXI.Graphics{
     }
 }
 
-class Bread extends PIXI.Graphics{
+class Bread extends PIXI.Sprite{
     constructor(width,height,grandma,lives,x=0,y=0,direction=0,color=0x0000FF){
-        super();
+        super(PIXI.loader.resources["images/Bread.png"].texture);
+        this.pivot.set(this.width/2,this.height/2);
         this.lives = lives;
-        this.FillColor(color,x,y,width,height);
-        this.pivot.set(x,y);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -140,16 +137,13 @@ class Bread extends PIXI.Graphics{
     }
 
     updateLives(){
-        this.lives--;
-        if(this.lives==3){
-            //this.color=0x0000FF;
-            //this.FillColor(this.color,this.x,this.y,this.width,this.height);
-        }
-        else if(this.lives==2){
+        if(this.lives==2){
+            this.tint = 0xFFFF00;
             //this.color=0xFF00FF;
             //this.FillColor(this.color,this.x,this.y,this.width,this.height);
         }
         else if(this.lives==1){
+            this.tint = 0xFF0000;
             //this.color=0xFF0000;
            // this.FillColor(this.color,this.x,this.y,this.width,this.height);
         }
